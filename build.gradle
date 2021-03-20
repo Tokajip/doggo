@@ -2,7 +2,8 @@
 buildscript {
     ext{
         kotlin_version = "1.4.20"
-        hilt_version = '2.33-beta'
+        hilt_version = "2.33-beta"
+        retrofit_version = "2.9.0"
     }
     repositories {
         google()

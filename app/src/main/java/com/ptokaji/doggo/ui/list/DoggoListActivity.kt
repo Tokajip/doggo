@@ -3,13 +3,14 @@ package com.ptokaji.doggo.ui.list
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.ptokaji.doggo.R
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class DoggoListActivity: AppCompatActivity() {
+class DoggoListActivity : AppCompatActivity() {
 
     lateinit var viewModel: DoggoListViewModel
 
@@ -21,6 +22,8 @@ class DoggoListActivity: AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        findViewById<TextView>(R.id.textView).text = viewModel.getDogList()
+        viewModel.getDogList().observe(this, Observer { breedsList ->
+            findViewById<TextView>(R.id.textView).text = breedsList.toString()
+        })
     }
 }
