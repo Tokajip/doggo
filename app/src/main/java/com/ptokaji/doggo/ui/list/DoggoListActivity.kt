@@ -1,0 +1,13 @@
+package com.ptokaji.doggo.ui.list
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.ptokaji.doggo.R
+
+class DoggoListActivity: AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_doggo_list)
+    }
+}
