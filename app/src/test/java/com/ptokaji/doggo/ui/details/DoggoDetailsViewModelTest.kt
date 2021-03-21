@@ -8,9 +8,9 @@ import com.ptokaji.doggo.domain.usecase.GetSubBreedUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
@@ -18,7 +18,11 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestRule
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+import kotlin.coroutines.ContinuationInterceptor
 
+@ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
 class DoggoDetailsViewModelTest {
 
@@ -30,23 +34,16 @@ class DoggoDetailsViewModelTest {
     @get:Rule
     var rule: TestRule = InstantTaskExecutorRule()
 
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
-
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(mainThreadSurrogate)
         sut = DoggoDetailsViewModel(getBreedUseCase, getSubBreedUseCase)
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.close()
-    }
-
     @Test
-    fun `GIVEN subBreed is null WHEN getImages THEN getBreedUseCase is called`() {
+    fun `GIVEN subBreed is null WHEN getImages THEN getBreedUseCase is called`() = runBlocking {
         // GIVEN
         val mockBreed = "mockBreed"
         coEvery { getBreedUseCase.execute(mockBreed) } returns listOf("mockUrl")
@@ -59,18 +56,24 @@ class DoggoDetailsViewModelTest {
     }
 
     @Test
-    fun `GIVEN subBreed is not null WHEN getImages THEN getSubBreedUseCase is called`() {
-        // GIVEN
-        val mockBreed = "mockBreed"
-        val mockSubBreed = "mockSubBreed"
-        coEvery { getSubBreedUseCase.execute(mockBreed, mockSubBreed) } returns listOf("mockUrl")
-        // WHEN
-        sut.getImages(mockBreed, mockSubBreed).observeForTesting {
-            // THEN
-            coVerify(exactly = 0) { getBreedUseCase.execute(mockBreed) }
-            coVerify { getSubBreedUseCase.execute(mockBreed, mockSubBreed) }
+    fun `GIVEN subBreed is not null WHEN getImages THEN getSubBreedUseCase is called`() =
+        runBlocking {
+            // GIVEN
+            val mockBreed = "mockBreed"
+            val mockSubBreed = "mockSubBreed"
+            coEvery {
+                getSubBreedUseCase.execute(
+                    mockBreed,
+                    mockSubBreed
+                )
+            } returns listOf("mockUrl")
+            // WHEN
+            sut.getImages(mockBreed, mockSubBreed).observeForTesting {
+                // THEN
+                coVerify(exactly = 0) { getBreedUseCase.execute(mockBreed) }
+                coVerify { getSubBreedUseCase.execute(mockBreed, mockSubBreed) }
+            }
         }
-    }
 }
 
 fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
@@ -80,5 +83,19 @@ fun <T> LiveData<T>.observeForTesting(block: () -> Unit) {
         block()
     } finally {
         removeObserver(observer)
+    }
+}
+
+@ExperimentalCoroutinesApi
+class MainCoroutineRule : TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
+
+    override fun starting(description: Description?) {
+        super.starting(description)
+        Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
+    }
+
+    override fun finished(description: Description?) {
+        super.finished(description)
+        Dispatchers.resetMain()
     }
 }

@@ -76,9 +76,6 @@ class DoggoRepositoryImplTest {
             // GIVEN
             // GIVEN
             val mockBreed = "mocnBreedName"
-            val mockResponse = mockk<DogImagesResponse> {
-                every { message } returns listOf("mockUrl")
-            }
             coEvery { api.getBreed(mockBreed) } throws Exception("mockMessage")
             // WHEN
             sut.getAllBreeds()
