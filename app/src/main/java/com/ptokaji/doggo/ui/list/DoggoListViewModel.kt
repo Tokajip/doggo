@@ -16,7 +16,7 @@ class DoggoListViewModel @Inject constructor(
 
     fun getDogList(): LiveData<Result<List<BreedsUiModel>>> = liveData {
         try {
-            val allBreeds = getAllBreedsUseCase.getAllBreeds()
+            val allBreeds = getAllBreedsUseCase.execute()
             val mappedBreeds = allBreeds.map {
                 breedsUiMapper.mapDomainToUi(it)
             }.flatten()

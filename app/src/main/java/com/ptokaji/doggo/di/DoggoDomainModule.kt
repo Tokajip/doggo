@@ -1,7 +1,6 @@
 package com.ptokaji.doggo.di
 
-import com.ptokaji.doggo.domain.usecase.GetAllBreedsUseCase
-import com.ptokaji.doggo.domain.usecase.GetAllBreedsUseCaseImpl
+import com.ptokaji.doggo.domain.usecase.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,4 +12,10 @@ abstract class DoggoDomainModule {
 
     @Binds
     abstract fun bindGetAllBreedsUseCase(impl: GetAllBreedsUseCaseImpl): GetAllBreedsUseCase
+
+    @Binds
+    abstract fun bindGetBreedUseCase(impl: GetBreedUseCaseImpl): GetBreedUseCase
+
+    @Binds
+    abstract fun bindGetSubBreedUseCase(impl: GetSubBreedUseCaseImpl): GetSubBreedUseCase
 }

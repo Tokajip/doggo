@@ -6,7 +6,6 @@ import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.ptokaji.doggo.R
@@ -14,12 +13,12 @@ import com.ptokaji.doggo.util.Result
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DoggoListFragment: Fragment(R.layout.fragment_doggo_list) {
+class DoggoListFragment : Fragment(R.layout.fragment_doggo_list) {
 
-    lateinit var viewModel: DoggoListViewModel
+    private lateinit var viewModel: DoggoListViewModel
 
-    lateinit var dogList: RecyclerView
-    lateinit var progressBar: ProgressBar
+    private lateinit var dogList: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +46,11 @@ class DoggoListFragment: Fragment(R.layout.fragment_doggo_list) {
                 }
                 is Result.Error -> {
                     Snackbar
-                        .make(this.requireView().findViewById(android.R.id.content), R.string.error_text, Snackbar.LENGTH_LONG)
+                        .make(
+                            this.requireView().findViewById(android.R.id.content),
+                            R.string.error_text,
+                            Snackbar.LENGTH_LONG
+                        )
                         .show()
                 }
             }

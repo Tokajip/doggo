@@ -9,7 +9,7 @@ class GetAllBreedsUseCaseImpl @Inject constructor(
     private val repository: DoggoRepository,
     private val mapper: BreedsDomainMapper
 ): GetAllBreedsUseCase {
-    override suspend fun getAllBreeds(): List<BreedsEntity> {
+    override suspend fun execute(): List<BreedsEntity> {
         val api = repository.getAllBreeds()
         return mapper.fromApiToDomain(api)
     }

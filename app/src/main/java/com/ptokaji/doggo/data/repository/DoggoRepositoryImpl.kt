@@ -13,4 +13,11 @@ class DoggoRepositoryImpl @Inject constructor(
     override suspend fun getAllBreeds(): Map<String, List<String>> = withContext(ioDispatcher) {
         api.getBreedsList().message
     }
+
+    override suspend fun getBreed(name: String): List<String> = withContext(ioDispatcher) {
+        api.getBreed(name).message
+    }
+
+    override suspend fun getSubBreed(breed: String, subBreed: String): List<String> =
+        withContext(ioDispatcher) { api.getSubBreed(breed, subBreed).message }
 }

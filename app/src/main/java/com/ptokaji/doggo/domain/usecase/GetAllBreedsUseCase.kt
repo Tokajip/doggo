@@ -4,5 +4,5 @@ import com.ptokaji.doggo.domain.model.BreedsEntity
 
 interface GetAllBreedsUseCase {
 
-    suspend fun getAllBreeds(): List<BreedsEntity>
+    suspend fun execute(): List<BreedsEntity>
 }
