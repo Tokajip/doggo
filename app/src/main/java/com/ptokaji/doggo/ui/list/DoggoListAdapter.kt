@@ -39,9 +39,11 @@ class DoggoViewHolderItem(private val view: View) : RecyclerView.ViewHolder(view
         view.findViewById<TextView>(R.id.dog_name).apply {
             text = breedsUiModel.name.getFormattedBreedName(breedsUiModel.subBreed)
             setOnClickListener {
-                findNavController().navigate(DoggoListFragmentDirections.actionDoggoListFragmentToDoggoDetailsFragment(
-                    breedsUiModel.name, breedsUiModel.subBreed
-                ))
+                findNavController().navigate(
+                    DoggoListFragmentDirections.actionDoggoListFragmentToDoggoDetailsFragment(
+                        breedsUiModel.name, breedsUiModel.subBreed
+                    )
+                )
             }
         }
     }
