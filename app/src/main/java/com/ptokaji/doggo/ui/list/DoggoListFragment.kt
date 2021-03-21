@@ -3,7 +3,7 @@ package com.ptokaji.doggo.ui.list
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +12,8 @@ import com.ptokaji.doggo.R
 import com.ptokaji.doggo.util.Result
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class DoggoListActivity : AppCompatActivity() {
+class DoggoListFragment: Fragment(R.layout.fragment_doggo_list) {
 
     lateinit var viewModel: DoggoListViewModel
 
@@ -24,9 +23,12 @@ class DoggoListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(DoggoListViewModel::class.java)
-        setContentView(R.layout.activity_doggo_list)
-        dogList = findViewById(R.id.dog_list)
-        progressBar = findViewById(R.id.progress_bar)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dogList = view.findViewById(R.id.dog_list)
+        progressBar = view.findViewById(R.id.progress_bar)
     }
 
     override fun onResume() {
@@ -43,13 +45,12 @@ class DoggoListActivity : AppCompatActivity() {
                     }
                 }
                 is Result.Error -> {
-
+                    Snackbar
+                        .make(this.requireView().findViewById(android.R.id.content), R.string.error_text, Snackbar.LENGTH_LONG)
+                        .show()
                 }
             }
             progressBar.visibility = View.GONE
-            Snackbar
-                .make(findViewById(android.R.id.content), R.string.error_text, Snackbar.LENGTH_LONG)
-                .show()
         })
     }
 }
