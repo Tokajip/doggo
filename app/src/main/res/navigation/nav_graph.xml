@@ -9,5 +9,22 @@
         android:id="@+id/doggoListFragment"
         android:name="com.ptokaji.doggo.ui.list.DoggoListFragment"
         android:label="DoggoListFragment"
-        tools:layout="@layout/fragment_doggo_list" />
+        tools:layout="@layout/fragment_doggo_list" >
+        <action
+            android:id="@+id/action_doggoListFragment_to_doggoDetailsFragment"
+            app:destination="@id/doggoDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/doggoDetailsFragment"
+        tools:layout="@layout/fragment_doggo_details"
+        android:name="com.ptokaji.doggo.ui.details.DoggoDetailsFragment"
+        android:label="DoggoDetailsFragment" >
+        <argument
+            android:name="breed"
+            app:argType="string" />
+        <argument
+            android:name="subBreed"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

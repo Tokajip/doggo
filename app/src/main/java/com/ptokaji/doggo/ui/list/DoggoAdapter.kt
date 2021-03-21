@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.ptokaji.doggo.R
+import com.ptokaji.doggo.util.getFormattedBreedName
 
 class DoggoAdapter : RecyclerView.Adapter<DoggoViewHolderItem>() {
 
@@ -33,14 +35,14 @@ class DoggoAdapter : RecyclerView.Adapter<DoggoViewHolderItem>() {
 
 class DoggoViewHolderItem(private val view: View) : RecyclerView.ViewHolder(view) {
     fun bindView(breedsUiModel: BreedsUiModel) {
-        val title = StringBuilder(breedsUiModel.name.capitalize())
-        breedsUiModel.subBreed?.let { subBreed ->
-            title.insert(0, subBreed.capitalize())
-            title.insert(subBreed.length," ")
-        }
+
         view.findViewById<TextView>(R.id.dog_name).apply {
-            text = title.toString()
-            setOnClickListener { breedsUiModel.onClickAction(title.toString()) }
+            text = breedsUiModel.name.getFormattedBreedName(breedsUiModel.subBreed)
+            setOnClickListener {
+                findNavController().navigate(DoggoListFragmentDirections.actionDoggoListFragmentToDoggoDetailsFragment(
+                    breedsUiModel.name, breedsUiModel.subBreed
+                ))
+            }
         }
     }
 }
